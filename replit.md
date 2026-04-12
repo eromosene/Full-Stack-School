@@ -1,6 +1,8 @@
-# Workspace
+# Full Stack School Management System
 
 ## Overview
+
+A school management dashboard cloned from [safak/full-stack-school](https://github.com/safak/full-stack-school). Built with Next.js 14, Prisma, PostgreSQL, Clerk authentication, and Tailwind CSS.
 
 pnpm workspace monorepo using TypeScript. Each package manages its own dependencies.
 
@@ -9,19 +11,45 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - **Monorepo tool**: pnpm workspaces
 - **Node.js version**: 24
 - **Package manager**: pnpm
-- **TypeScript version**: 5.9
-- **API framework**: Express 5
-- **Database**: PostgreSQL + Drizzle ORM
-- **Validation**: Zod (`zod/v4`), `drizzle-zod`
-- **API codegen**: Orval (from OpenAPI spec)
-- **Build**: esbuild (CJS bundle)
+- **Frontend**: Next.js 14.2.5 (App Router)
+- **Auth**: Clerk (`@clerk/nextjs`)
+- **Database**: PostgreSQL + Prisma ORM
+- **Styling**: Tailwind CSS
+- **Charts**: Recharts
+- **Calendar**: react-big-calendar, react-calendar
+- **Forms**: react-hook-form + zod validation
+- **Image uploads**: next-cloudinary
+
+## Project Structure
+
+- `artifacts/school-app/` — Main Next.js school management app
+  - `src/app/(dashboard)/` — Dashboard layouts for admin, teacher, student, parent
+  - `src/app/(dashboard)/list/` — List pages for teachers, students, classes, subjects, exams, etc.
+  - `src/app/[[...sign-in]]/` — Clerk sign-in page
+  - `src/components/` — Shared UI components (charts, calendars, forms, tables)
+  - `src/lib/` — Server actions, Prisma client, form schemas, utils
+  - `prisma/` — Database schema and seed data
+- `artifacts/api-server/` — Express API server (workspace default)
 
 ## Key Commands
 
-- `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
+- `pnpm --filter @workspace/school-app run dev` — run school app locally
+- `cd artifacts/school-app && npx prisma db push` — push DB schema changes
+- `cd artifacts/school-app && npx prisma db seed` — seed database with sample data
 - `pnpm --filter @workspace/api-server run dev` — run API server locally
 
-See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details.
+## Environment Variables Required
+
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` — Clerk publishable key
+- `CLERK_SECRET_KEY` — Clerk secret key
+- `DATABASE_URL` — PostgreSQL connection string (auto-provided by Replit)
+- `NEXT_PUBLIC_CLERK_SIGN_IN_URL` — Sign-in page URL
+- `NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL` — Redirect after sign-in
+
+## Database
+
+PostgreSQL with Prisma ORM. Models: Admin, Student, Teacher, Parent, Grade, Class, Subject, Lesson, Exam, Assignment, Result, Attendance, Event, Announcement.
+
+## Auth Roles
+
+Users have roles set via Clerk publicMetadata: admin, teacher, student, parent. Middleware enforces route access based on role.
