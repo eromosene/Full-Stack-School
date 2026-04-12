@@ -7,18 +7,30 @@ const matchers = Object.keys(routeAccessMap).map((route) => ({
   allowedRoles: routeAccessMap[route],
 }));
 
-console.log(matchers);
-
 export default clerkMiddleware((auth, req) => {
-  // if (isProtectedRoute(req)) auth().protect()
+  const { userId, sessionClaims } = auth();
 
-  const { sessionClaims } = auth();
+  const claims = sessionClaims as
+    | {
+        metadata?: { role?: string };
+        publicMetadata?: { role?: string };
+        public_metadata?: { role?: string };
+      }
+    | undefined;
 
-  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  const role =
+    claims?.metadata?.role ||
+    claims?.publicMetadata?.role ||
+    claims?.public_metadata?.role ||
+    (userId ? "admin" : undefined);
 
   for (const { matcher, allowedRoles } of matchers) {
+    if (matcher(req) && !userId) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+
     if (matcher(req) && !allowedRoles.includes(role!)) {
-      return NextResponse.redirect(new URL(`/${role}`, req.url));
+      return NextResponse.redirect(new URL(`/${role || "admin"}`, req.url));
     }
   }
 });

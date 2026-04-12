@@ -11,12 +11,25 @@ const LoginPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const role = user?.publicMetadata.role;
+    if (!isLoaded || !isSignedIn) return;
 
-    if (role) {
-      router.push(`/${role}`);
-    }
-  }, [user, router]);
+    const role = (user?.publicMetadata.role as string | undefined) || "admin";
+    router.replace(`/${role}`);
+  }, [isLoaded, isSignedIn, user, router]);
+
+  if (isLoaded && isSignedIn) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-lamaSkyLight">
+        <div className="bg-white p-12 rounded-md shadow-2xl flex flex-col gap-4 items-center">
+          <h1 className="text-xl font-bold flex items-center gap-2">
+            <Image src="/logo.png" alt="" width={24} height={24} />
+            Saltech Edu
+          </h1>
+          <h2 className="text-gray-400">Opening your dashboard...</h2>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen flex items-center justify-center bg-lamaSkyLight">
