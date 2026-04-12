@@ -1,8 +1,8 @@
-# Full Stack School Management System
+# Saltech Edu School Management System
 
 ## Overview
 
-A school management dashboard cloned from [safak/full-stack-school](https://github.com/safak/full-stack-school). Built with Next.js 14, Prisma, PostgreSQL, Clerk authentication, and Tailwind CSS.
+A school management dashboard cloned from [safak/full-stack-school](https://github.com/safak/full-stack-school) and branded as Saltech Edu. Built with Next.js 14, Prisma, PostgreSQL, Clerk authentication, and Tailwind CSS.
 
 pnpm workspace monorepo using TypeScript. Each package manages its own dependencies.
 
@@ -22,7 +22,7 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 
 ## Project Structure
 
-- `artifacts/school-app/` — Main Next.js school management app
+- `artifacts/school-app/` — Main Next.js Saltech Edu school management app
   - `src/app/(dashboard)/` — Dashboard layouts for admin, teacher, student, parent
   - `src/app/(dashboard)/list/` — List pages for teachers, students, classes, subjects, exams, etc.
   - `src/app/[[...sign-in]]/` — Clerk sign-in page
@@ -52,4 +52,4 @@ PostgreSQL with Prisma ORM. Models: Admin, Student, Teacher, Parent, Grade, Clas
 
 ## Auth Roles
 
-Users have roles set via Clerk publicMetadata: admin, teacher, student, parent. Middleware enforces route access based on role.
+Users have roles set via Clerk publicMetadata: admin, teacher, student, parent. Middleware enforces route access based on role. Demo Clerk users have been created for all four roles and linked to seeded database records so role dashboards can load real data.
