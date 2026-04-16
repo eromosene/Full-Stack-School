@@ -5,13 +5,13 @@ import { useForm } from "react-hook-form";
 import InputField from "../InputField";
 import Image from "next/image";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useFormState } from "react-dom";
 import {
   studentSchema,
   StudentSchema,
   teacherSchema,
   TeacherSchema,
 } from "@/lib/formValidationSchemas";
-import { useFormState } from "react-dom";
 import {
   createStudent,
   createTeacher,

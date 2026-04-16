@@ -420,7 +420,7 @@ importers:
         specifier: ^5.19.1
         version: 5.22.0
       react:
-        specifier: ^18
+        specifier: 18.3.1
         version: 18.3.1
       react-big-calendar:
         specifier: ^1.13.2
@@ -429,7 +429,7 @@ importers:
         specifier: ^5.0.0
         version: 5.1.0(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-dom:
-        specifier: ^18
+        specifier: 18.3.1
         version: 18.3.1(react@18.3.1)
       react-hook-form:
         specifier: ^7.52.2
