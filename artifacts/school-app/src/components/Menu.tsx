@@ -1,4 +1,5 @@
 import { currentUser } from "@clerk/nextjs/server";
+import { SignOutButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,7 +10,7 @@ const menuItems = [
       {
         icon: "/home.png",
         label: "Home",
-        href: "/",
+        href: "ROLE_HOME",
         visible: ["admin", "teacher", "student", "parent"],
       },
       {
@@ -107,42 +108,46 @@ const menuItems = [
         href: "/settings",
         visible: ["admin", "teacher", "student", "parent"],
       },
-      {
-        icon: "/logout.png",
-        label: "Logout",
-        href: "/logout",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
     ],
   },
 ];
 
 const Menu = async () => {
   const user = await currentUser();
-  const role = (user?.publicMetadata.role as string | undefined) || "admin";
+  const role = (user?.publicMetadata?.role as string | undefined) || "admin";
+
   return (
     <div className="mt-4 text-sm">
       {menuItems.map((i) => (
-        <div className="flex flex-col gap-2" key={i.title}>
-          <span className="hidden lg:block text-gray-400 font-light my-4">
+        <div className="flex flex-col gap-1" key={i.title}>
+          <span className="hidden lg:block text-gray-400 font-light my-3 text-xs uppercase tracking-wider">
             {i.title}
           </span>
           {i.items.map((item) => {
-            if (item.visible.includes(role)) {
-              return (
-                <Link
-                  href={item.href}
-                  key={item.label}
-                  className="flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-2 rounded-md hover:bg-lamaSkyLight"
-                >
-                  <Image src={item.icon} alt="" width={20} height={20} />
-                  <span className="hidden lg:block">{item.label}</span>
-                </Link>
-              );
-            }
+            if (!item.visible.includes(role)) return null;
+            return (
+              <Link
+                href={item.href === "ROLE_HOME" ? `/${role}` : item.href}
+                key={item.label}
+                className="flex items-center gap-2 text-gray-600 py-2 px-2 rounded-lg hover:bg-lamaSkyLight transition-colors"
+              >
+                <Image src={item.icon} alt={item.label} width={20} height={20} className="flex-shrink-0" />
+                <span className="text-[11px] lg:text-sm font-medium leading-tight">{item.label}</span>
+              </Link>
+            );
           })}
         </div>
       ))}
+
+      {/* LOGOUT */}
+      <div className="mt-4 border-t pt-3">
+        <SignOutButton redirectUrl="/">
+          <button className="flex items-center gap-2 text-gray-600 py-2 px-2 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors w-full">
+            <Image src="/logout.png" alt="Logout" width={20} height={20} className="flex-shrink-0" />
+            <span className="text-[11px] lg:text-sm font-medium">Logout</span>
+          </button>
+        </SignOutButton>
+      </div>
     </div>
   );
 };

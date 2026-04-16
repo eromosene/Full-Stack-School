@@ -24,8 +24,11 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 
 - `artifacts/school-app/` — Main Next.js Saltech Edu school management app
   - `src/app/(dashboard)/` — Dashboard layouts for admin, teacher, student, parent
-  - `src/app/(dashboard)/list/` — List pages for teachers, students, classes, subjects, exams, etc.
-  - `src/app/[[...sign-in]]/` — Clerk sign-in page
+  - `src/app/(dashboard)/list/` — List pages (teachers, students, classes, subjects, exams, attendance, messages, etc.)
+  - `src/app/(dashboard)/profile/` — User profile page (Clerk UserProfile)
+  - `src/app/(dashboard)/settings/` — Settings page
+  - `src/app/[[...sign-in]]/` — Landing page + Clerk sign-in (role-selection landing page)
+  - `src/app/opengraph-image.tsx` — Dynamic OG image for link previews
   - `src/components/` — Shared UI components (charts, calendars, forms, tables)
   - `src/lib/` — Server actions, Prisma client, form schemas, utils
   - `prisma/` — Database schema and seed data
