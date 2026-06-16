@@ -2,9 +2,16 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Menu from "./Menu";
 
-export default function DashboardSidebar({ dashboardHref }: { dashboardHref: string }) {
+export default function DashboardSidebar({
+  dashboardHref,
+  menuSlot,
+  children,
+}: {
+  dashboardHref: string;
+  menuSlot: React.ReactNode;
+  children: React.ReactNode;
+}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const Logo = () => (
@@ -21,8 +28,8 @@ export default function DashboardSidebar({ dashboardHref }: { dashboardHref: str
   );
 
   return (
-    <>
-      {/* Backdrop */}
+    <div className="h-screen flex w-full">
+      {/* Backdrop — mobile only */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/40 z-40 lg:hidden"
@@ -32,15 +39,14 @@ export default function DashboardSidebar({ dashboardHref }: { dashboardHref: str
 
       {/* Sidebar */}
       <div
-        className={`
-          flex flex-col overflow-y-auto border-r border-gray-100 bg-white p-4
-          ${sidebarOpen
-            ? "fixed inset-y-0 left-0 z-50 w-64 shadow-xl lg:relative lg:w-[16%] xl:w-[14%]"
-            : "hidden lg:flex lg:w-[16%] xl:w-[14%] md:w-[8%] w-[14%]"
-          }
-        `}
+        className={[
+          "flex flex-col overflow-y-auto border-r border-gray-100 bg-white p-4",
+          sidebarOpen
+            ? "fixed inset-y-0 left-0 z-50 w-64 shadow-xl"
+            : "hidden lg:flex lg:w-[16%] xl:w-[14%] md:w-[8%] w-[14%]",
+        ].join(" ")}
       >
-        {/* Close button — only visible when open on mobile */}
+        {/* Close button — mobile overlay only */}
         {sidebarOpen && (
           <button
             onClick={() => setSidebarOpen(false)}
@@ -51,27 +57,25 @@ export default function DashboardSidebar({ dashboardHref }: { dashboardHref: str
           </button>
         )}
 
-        {/* Logo — acts as toggle on mobile, nav link on desktop */}
-        <button
-          className="flex items-center justify-center lg:justify-start gap-2 mb-2 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-          aria-label="Dashboard home"
-        >
-          <Link href={dashboardHref} className="flex items-center gap-2">
-            <Logo />
-          </Link>
-        </button>
+        {/* Logo */}
         <Link
           href={dashboardHref}
-          className="hidden lg:flex items-center justify-start gap-2 mb-2"
+          className="flex items-center justify-center lg:justify-start gap-2 mb-2"
+          onClick={() => setSidebarOpen(false)}
         >
           <Logo />
         </Link>
 
-        <Menu />
+        {/* Menu rendered server-side, passed as a slot */}
+        {menuSlot}
       </div>
 
-      {/* Mobile hamburger — visible only on small screens when sidebar is closed */}
+      {/* Main content */}
+      <div className="flex-1 bg-[#F7F8FA] overflow-scroll flex flex-col min-w-0">
+        {children}
+      </div>
+
+      {/* Floating hamburger — mobile only, when sidebar is closed */}
       {!sidebarOpen && (
         <button
           onClick={() => setSidebarOpen(true)}
@@ -83,6 +87,6 @@ export default function DashboardSidebar({ dashboardHref }: { dashboardHref: str
           </svg>
         </button>
       )}
-    </>
+    </div>
   );
 }

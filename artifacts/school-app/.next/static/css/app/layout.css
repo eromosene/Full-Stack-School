@@ -843,9 +843,6 @@ video {
 .items-center {
   align-items: center;
 }
-.justify-start {
-  justify-content: flex-start;
-}
 .justify-end {
   justify-content: flex-end;
 }
@@ -1675,10 +1672,6 @@ video {
 }
 
 @media (min-width: 1024px) {
-
-  .lg\:relative {
-    position: relative;
-  }
 
   .lg\:block {
     display: block;

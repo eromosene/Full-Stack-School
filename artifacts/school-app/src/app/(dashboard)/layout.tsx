@@ -1,4 +1,5 @@
 import DashboardSidebar from "@/components/DashboardSidebar";
+import Menu from "@/components/Menu";
 import Navbar from "@/components/Navbar";
 import { currentUser } from "@clerk/nextjs/server";
 
@@ -12,13 +13,12 @@ export default async function DashboardLayout({
   const dashboardHref = `/${role}`;
 
   return (
-    <div className="h-screen flex">
-      <DashboardSidebar dashboardHref={dashboardHref} />
-      {/* MAIN CONTENT */}
-      <div className="flex-1 bg-[#F7F8FA] overflow-scroll flex flex-col min-w-0">
-        <Navbar />
-        {children}
-      </div>
-    </div>
+    <DashboardSidebar
+      dashboardHref={dashboardHref}
+      menuSlot={<Menu />}
+    >
+      <Navbar />
+      {children}
+    </DashboardSidebar>
   );
 }
