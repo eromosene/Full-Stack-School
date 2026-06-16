@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Saltech Edu - School Management System";
+export const alt = "Yemsol Private Schools - School Management System";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -35,7 +35,7 @@ export default async function Image() {
             <rect x="36" y="64" width="10" height="2" rx="1" fill="#7c3aed" />
           </svg>
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <span style={{ fontSize: "52px", fontWeight: "900", color: "#1e1b4b" }}>Saltech Edu</span>
+            <span style={{ fontSize: "52px", fontWeight: "900", color: "#1e1b4b" }}>Yemsol Private Schools</span>
             <span style={{ fontSize: "22px", color: "#7c3aed", fontWeight: "600", marginTop: "-4px" }}>School Management System</span>
           </div>
         </div>

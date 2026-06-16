@@ -128,14 +128,8 @@ const LandingPage = ({ onRoleSelect }: { onRoleSelect: (role: string) => void })
     {/* NAVBAR */}
     <nav className="flex items-center justify-between px-6 py-4 bg-white/80 backdrop-blur shadow-sm sticky top-0 z-10">
       <div className="flex items-center gap-2">
-        <svg viewBox="0 0 40 40" className="w-9 h-9" fill="none">
-          <circle cx="20" cy="20" r="20" fill="#CFCEFF" />
-          <path d="M20 8 L32 15 L20 22 L8 15 Z" fill="#7c3aed" />
-          <path d="M8 15 L8 26 L20 33 L32 26 L32 15 L20 22 Z" fill="#a78bfa" />
-          <rect x="31" y="15" width="2" height="11" rx="1" fill="#7c3aed" />
-          <circle cx="32" cy="27.5" r="2.5" fill="#7c3aed" />
-        </svg>
-        <span className="font-bold text-lg text-gray-800">Saltech Edu</span>
+        <img src="/yemsol-logo.png" alt="Yemsol Private Schools" className="w-9 h-9 object-contain" />
+        <span className="font-bold text-lg text-gray-800">Yemsol Private Schools</span>
       </div>
       <span className="text-sm text-gray-500 hidden sm:block">School Management System</span>
     </nav>
@@ -156,7 +150,7 @@ const LandingPage = ({ onRoleSelect }: { onRoleSelect: (role: string) => void })
         </svg>
       </div>
       <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 leading-tight">
-        Welcome to <span className="text-purple-600">Saltech Edu</span>
+        Welcome to <span className="text-purple-600">Yemsol Private Schools</span>
       </h1>
       <p className="text-gray-500 text-base sm:text-lg max-w-xl mb-2">
         A complete school management platform connecting admins, teachers, students and parents in one place.
@@ -195,7 +189,7 @@ const LandingPage = ({ onRoleSelect }: { onRoleSelect: (role: string) => void })
 
     {/* FOOTER */}
     <footer className="text-center py-6 text-xs text-gray-400">
-      &copy; {new Date().getFullYear()} Saltech Edu · School Management System
+      &copy; {new Date().getFullYear()} Yemsol Private Schools · School Management System
     </footer>
   </div>
 );
@@ -215,12 +209,8 @@ const LoginPage = () => {
     return (
       <div className="h-screen flex items-center justify-center bg-lamaSkyLight">
         <div className="bg-white p-12 rounded-2xl shadow-2xl flex flex-col gap-4 items-center">
-          <svg viewBox="0 0 40 40" className="w-10 h-10" fill="none">
-            <circle cx="20" cy="20" r="20" fill="#CFCEFF" />
-            <path d="M20 8 L32 15 L20 22 L8 15 Z" fill="#7c3aed" />
-            <path d="M8 15 L8 26 L20 33 L32 26 L32 15 L20 22 Z" fill="#a78bfa" />
-          </svg>
-          <h1 className="text-xl font-bold text-gray-800">Saltech Edu</h1>
+          <img src="/yemsol-logo.png" alt="Yemsol Private Schools" className="w-12 h-12 object-contain" />
+          <h1 className="text-xl font-bold text-gray-800">Yemsol Private Schools</h1>
           <h2 className="text-gray-400">Opening your dashboard...</h2>
         </div>
       </div>

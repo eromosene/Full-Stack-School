@@ -8,15 +8,18 @@ import "react-toastify/dist/ReactToastify.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Saltech Edu",
-  description: "Saltech Edu school management system",
+  title: "Yemsol Private Schools",
+  description: "Yemsol Private Schools management system",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL ||
     (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : "http://localhost:3000")
   ),
+  icons: {
+    icon: "/yemsol-logo.png",
+  },
   openGraph: {
-    title: "Saltech Edu",
-    description: "Saltech Edu school management system",
+    title: "Yemsol Private Schools",
+    description: "Yemsol Private Schools management system",
     type: "website",
   },
 };

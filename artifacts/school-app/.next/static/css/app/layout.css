@@ -1094,6 +1094,9 @@ video {
 .to-lamaPurpleLight {
   --tw-gradient-to: #F1F0FF var(--tw-gradient-to-position);
 }
+.object-contain {
+  object-fit: contain;
+}
 .object-cover {
   object-fit: cover;
 }
