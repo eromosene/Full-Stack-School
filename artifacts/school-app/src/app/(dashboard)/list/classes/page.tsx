@@ -17,7 +17,7 @@ const ClassListPage = async ({
 }) => {
 
 const { userId, sessionClaims } = auth();
-const role = (sessionClaims?.metadata as { role?: string })?.role || (sessionClaims as any)?.publicMetadata?.role || (userId ? "admin" : undefined);
+const role = (sessionClaims?.metadata as { role?: string })?.role || (sessionClaims as any)?.publicMetadata?.role;
 
 
 const columns = [

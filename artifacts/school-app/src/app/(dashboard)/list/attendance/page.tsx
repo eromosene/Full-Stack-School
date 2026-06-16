@@ -18,7 +18,7 @@ const AttendanceListPage = async ({
   searchParams: { [key: string]: string | undefined };
 }) => {
   const { sessionClaims, userId } = auth();
-  const role = (sessionClaims?.metadata as { role?: string })?.role || (sessionClaims as any)?.publicMetadata?.role || (userId ? "admin" : undefined);
+  const role = (sessionClaims?.metadata as { role?: string })?.role || (sessionClaims as any)?.publicMetadata?.role;
 
   const columns = [
     { header: "Student", accessor: "student" },
