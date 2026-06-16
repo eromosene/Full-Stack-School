@@ -1,0 +1,31 @@
+Let me check the zip file structure to understand the Replit version’s codebase first.​​​​​​​​​​​​​​​​
+
+Now I have everything I need. Here’s a detailed prompt you can paste directly into Replit AI:
+
+Copy this entire prompt and paste it into Replit AI:
+
+I want to add a mobile sidebar toggle to the dashboard. Here’s exactly what should happen:
+The behaviour:
+	•	On mobile/small screens, the sidebar (left panel) should be hidden by default
+	•	When the logo (the SchooLama logo image/link at the top of the left panel) is clicked, the sidebar should slide open fully as an overlay
+	•	A close “✕” button should appear at the top-right corner of the open sidebar to close it
+	•	Clicking the ✕ closes the sidebar back
+Files to modify:
+	1.	src/app/(dashboard)/layout.tsx — Convert this to a client component ("use client"), add useState for sidebarOpen, pass it as a prop or use context. The logo <Link> should become a <button> (or the Link should have an onClick) that calls setSidebarOpen(true) on mobile. The left sidebar <div> should conditionally apply classes: when closed on mobile it’s hidden (hidden), when open it’s a fixed full-height overlay (fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg). On lg: screens it should always show normally (ignore the toggle).
+	2.	Inside the open sidebar overlay, add a close button at the top right:
+
+<button onClick={() => setSidebarOpen(false)} className="absolute top-4 right-4 text-gray-500 hover:text-black text-xl font-bold">✕</button>
+
+
+	3.	Also add a backdrop overlay behind the sidebar when it’s open on mobile — a semi-transparent black div that also closes the sidebar when clicked:
+
+{sidebarOpen && <div className="fixed inset-0 bg-black/40 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />}
+
+
+Summary of the left panel behaviour with Tailwind classes:
+	•	Closed (mobile default): hidden lg:flex (or lg:block)
+	•	Open (mobile toggled): fixed inset-y-0 left-0 z-50 w-64 bg-white p-4 flex flex-col shadow-xl lg:relative lg:flex
+Make sure the logo click only triggers the sidebar toggle on mobile (screens smaller than lg). On large screens, the logo should still work as a normal <Link href="/"> navigation.
+Keep all existing Menu and Navbar functionality intact. Do not change any server components other than converting layout.tsx to a client component.
+
+That prompt gives Replit AI everything it needs — the exact files, the logic, the Tailwind classes, and the close/backdrop behaviour. Paste it and let it run.​​​​​​​​​​​​​​​​
