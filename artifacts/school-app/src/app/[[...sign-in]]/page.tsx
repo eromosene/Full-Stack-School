@@ -136,19 +136,6 @@ const LandingPage = ({ onRoleSelect }: { onRoleSelect: (role: string) => void })
 
     {/* HERO */}
     <section className="px-6 py-16 flex flex-col items-center text-center max-w-4xl mx-auto">
-      <div className="mb-6">
-        <svg viewBox="0 0 120 120" className="w-28 h-28 mx-auto" fill="none">
-          <circle cx="60" cy="60" r="58" fill="#EDF9FD" stroke="#C3EBFA" strokeWidth="2" />
-          <path d="M60 20 L90 38 L60 56 L30 38 Z" fill="#0369a1" />
-          <path d="M30 38 L30 68 L60 86 L90 68 L90 38 L60 56 Z" fill="#0ea5e9" />
-          <rect x="88" y="38" width="4" height="26" rx="2" fill="#0369a1" />
-          <circle cx="90" cy="67" r="5" fill="#0369a1" />
-          <rect x="48" y="62" width="24" height="18" rx="2" fill="white" opacity="0.9" />
-          <rect x="52" y="66" width="7" height="1.5" rx="0.75" fill="#0369a1" />
-          <rect x="52" y="70" width="12" height="1.5" rx="0.75" fill="#0369a1" />
-          <rect x="52" y="74" width="9" height="1.5" rx="0.75" fill="#0369a1" />
-        </svg>
-      </div>
       <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 leading-tight">
         Welcome to <span className="text-purple-600">Yemsol Private Schools</span>
       </h1>
