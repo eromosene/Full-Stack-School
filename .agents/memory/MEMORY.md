@@ -1,0 +1,1 @@
+- [School App Clerk + Next.js Upgrade](school-app-clerk-nextjs-upgrade.md) — CVE-blocked packages, v5→v6 auth() async migration, clerkClient function call pattern, NEXT_PUBLIC env forwarding.

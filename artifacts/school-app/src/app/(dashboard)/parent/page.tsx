@@ -6,7 +6,7 @@ import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 
 const ParentPage = async () => {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   let students: { id: string; name: string; surname: string; classId: number }[] = [];
 

@@ -7,8 +7,8 @@ const matchers = Object.keys(routeAccessMap).map((route) => ({
   allowedRoles: routeAccessMap[route],
 }));
 
-export default clerkMiddleware((auth, req) => {
-  const { userId, sessionClaims } = auth();
+export default clerkMiddleware(async (auth, req) => {
+  const { userId, sessionClaims } = await auth();
 
   const claims = sessionClaims as
     | {
@@ -22,15 +22,17 @@ export default clerkMiddleware((auth, req) => {
     claims?.metadata?.role ||
     claims?.publicMetadata?.role ||
     claims?.public_metadata?.role ||
-    (userId ? "admin" : undefined);
+    undefined;
 
   for (const { matcher, allowedRoles } of matchers) {
     if (matcher(req) && !userId) {
       return NextResponse.redirect(new URL("/", req.url));
     }
 
-    if (matcher(req) && !allowedRoles.includes(role!)) {
-      return NextResponse.redirect(new URL(`/${role || "admin"}`, req.url));
+    // If user is authenticated but has no role, redirect to home rather than
+    // granting admin access (least-privilege: deny unknown roles).
+    if (matcher(req) && (!role || !allowedRoles.includes(role))) {
+      return NextResponse.redirect(new URL(role ? `/${role}` : "/", req.url));
     }
   }
 });

@@ -6,7 +6,7 @@ import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 
 const StudentPage = async () => {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   let classItem: { id: number; name: string } | null = null;
 

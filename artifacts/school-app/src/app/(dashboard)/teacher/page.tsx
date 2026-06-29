@@ -4,8 +4,8 @@ import FormContainer from "@/components/FormContainer";
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 
-const TeacherPage = () => {
-  const { userId, sessionClaims } = auth();
+const TeacherPage = async () => {
+  const { userId, sessionClaims } = await auth();
   const role = (sessionClaims?.metadata as { role?: string })?.role;
 
   return (
