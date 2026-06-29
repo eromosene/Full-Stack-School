@@ -3,7 +3,8 @@ import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
-import { auth } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth";
+import { cookies } from "next/headers";
 import { Attendance, Lesson, Prisma, Student, Subject } from "@prisma/client";
 import Image from "next/image";
 
@@ -17,8 +18,9 @@ const AttendanceListPage = async ({
 }: {
   searchParams: { [key: string]: string | undefined };
 }) => {
-  const { sessionClaims, userId } = await auth();
-  const role = (sessionClaims?.metadata as { role?: string })?.role || (sessionClaims as any)?.publicMetadata?.role;
+  const user = await getSessionUser(cookies());
+  const role = user?.role;
+  const userId = user?.id;
 
   const columns = [
     { header: "Student", accessor: "student" },

@@ -1,9 +1,10 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth";
+import { cookies } from "next/headers";
 
 const MessagesPage = async () => {
-  const user = await currentUser();
-  const role = (user?.publicMetadata?.role as string | undefined) || "admin";
-  const name = user?.fullName || user?.primaryEmailAddress?.emailAddress || "User";
+  const user = await getSessionUser(cookies());
+  const role = user?.role || "admin";
+  const name = user?.name || "User";
 
   return (
     <div className="bg-white p-6 rounded-md flex-1 m-4 mt-0">
@@ -26,7 +27,15 @@ const MessagesPage = async () => {
             Hi {name} — messaging features are coming soon.
           </p>
           <p className="text-gray-400 text-sm">
-            You'll be able to communicate with {role === "admin" ? "all staff and students" : role === "teacher" ? "students and parents" : role === "student" ? "your teachers" : "your child's teachers"} directly here.
+            You&apos;ll be able to communicate with{" "}
+            {role === "admin"
+              ? "all staff and students"
+              : role === "teacher"
+              ? "students and parents"
+              : role === "student"
+              ? "your teachers"
+              : "your child's teachers"}{" "}
+            directly here.
           </p>
         </div>
         <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-lg">

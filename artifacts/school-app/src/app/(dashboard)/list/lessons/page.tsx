@@ -6,7 +6,8 @@ import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { Class, Lesson, Prisma, Subject, Teacher } from "@prisma/client";
 import Image from "next/image";
-import { auth } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth";
+import { cookies } from "next/headers";
 
 type LessonList = Lesson & { subject: Subject } & { class: Class } & {
   teacher: Teacher;
@@ -19,8 +20,9 @@ const LessonListPage = async ({
   searchParams: { [key: string]: string | undefined };
 }) => {
 
-const { userId, sessionClaims } = await auth();
-const role = (sessionClaims?.metadata as { role?: string })?.role || (sessionClaims as any)?.publicMetadata?.role;
+const user = await getSessionUser(cookies());
+  const role = user?.role;
+  const userId = user?.id;
 
 
 const columns = [

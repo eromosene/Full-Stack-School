@@ -1,21 +1,22 @@
 import DashboardSidebar from "@/components/DashboardSidebar";
 import Menu from "@/components/Menu";
 import Navbar from "@/components/Navbar";
-import { currentUser } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth";
+import { cookies } from "next/headers";
 
 export default async function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await currentUser();
-  const role = (user?.publicMetadata?.role as string | undefined) || "admin";
+  const user = await getSessionUser(cookies());
+  const role = user?.role || "admin";
   const dashboardHref = `/${role}`;
 
   return (
     <DashboardSidebar
       dashboardHref={dashboardHref}
-      menuSlot={<Menu />}
+      menuSlot={<Menu role={role} />}
     >
       <Navbar />
       {children}

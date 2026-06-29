@@ -1,48 +1,39 @@
 ---
-name: School App Clerk + Next.js Upgrade
-description: CVE-blocked packages and Clerk v5→v6 migration patterns for the school-app Next.js artifact.
+name: School App Auth
+description: Auth history for the school-app — Clerk removal, custom JWT system, and key lessons.
 ---
 
-# School App — Clerk + Next.js Upgrade
+# School App — Auth History
 
-## Problem
-`@clerk/nextjs` 5.4.1 and `next` 14.2.5 were blocked by Replit's Socket Security Policy (Critical CVE). pnpm install fails with 403 on the tarball download.
+## Phase 1: Clerk CVE Fix (completed)
+`@clerk/nextjs` 5.4.1 and `next` 14.2.5 were blocked by Replit's Socket Security Policy (Critical CVE).
+- `next`: 14.2.5 → 14.2.35 (latest safe Next 14 patch; Next 15+ would need breaking params migration)
+- `@clerk/nextjs`: 5.4.1 → 6.39.5 (v6 supports Next 14; v7 requires Next 15+)
 
-## Fix Applied
-- `next`: 14.2.5 → 14.2.35 (latest safe Next 14 patch; Next 15+ would require additional page-level async params migration)
-- `@clerk/nextjs`: 5.4.1 → 6.39.5 (v6 still supports Next 14; v7 requires Next 15+)
+### v5 → v6 Breaking Changes
+- `auth()` is now async — all call sites need `await auth()`
+- `clerkClient` is now a function — `(await clerkClient()).users.*`
+- clerkMiddleware callback must be `async`
 
-**Why:** v7 of @clerk/nextjs drops Next 14 peer support. v6.39.5 is the latest compatible version.
+## Phase 2: Full Clerk Removal (completed)
+Clerk removed entirely. Replaced with custom JWT auth (jsonwebtoken + bcryptjs + jose).
 
-## v5 → v6 Breaking API Changes
+### New Auth Stack
+- **`src/lib/auth.ts`**: `hashPassword`, `verifyPassword`, `createToken`, `verifyToken`, `getSessionUser(cookieStore)`
+- **Cookie**: `yps_session` (httpOnly JWT, 7-day expiry, signed with `SESSION_SECRET`)
+- **Middleware**: uses `jose` `jwtVerify` (Edge-compatible) — full signature verification, clears invalid cookies
+- **API routes**: `/api/auth/login`, `/api/auth/signup`, `/api/auth/logout`
+- **User model** added to Prisma schema for login accounts
 
-### 1. `auth()` is now async
-- Before: `const { userId, sessionClaims } = auth();`
-- After: `const { userId, sessionClaims } = await auth();`
-- Affects: all server components, server actions, and the clerkMiddleware callback (which must also be `async`)
+### Key Design Decisions
+- Self-signup always creates `role: "admin"`. Teachers/students/parents are provisioned by admins via the management UI (their Teacher/Student records share ID with a User record created in actions.ts).
+- `Menu` component is `"use client"` but receives `role` prop from DashboardLayout — never reads the httpOnly cookie client-side.
+- All server components call `getSessionUser(cookies())` which verifies JWT signature — provides real data-level security even if middleware is bypassed.
+- Middleware verifies JWT with `jose` and clears bad cookies rather than redirecting loop.
 
-### 2. `clerkClient` is now a function
-- Before: `await clerkClient.users.createUser(...)`
-- After: `await (await clerkClient()).users.createUser(...)`
+### Files Changed
+All files under `src/app`, `src/components`, `src/lib`, `src/middleware.ts`, `prisma/schema.prisma`, `package.json`.
 
-### 3. Middleware must be async
-- Before: `clerkMiddleware((auth, req) => { const x = auth(); })`
-- After: `clerkMiddleware(async (auth, req) => { const x = await auth(); })`
+**Why:** Clerk was blocked by Replit's CVE firewall; custom JWT is simpler and self-contained.
 
-## Env Var Setup
-`setupClerkWhitelabelAuth()` provisions `CLERK_PUBLISHABLE_KEY` as a secret. Next.js client code needs `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`. Forward it in `next.config.mjs`:
-```js
-env: { NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.CLERK_PUBLISHABLE_KEY }
-```
-
-## pnpm Build Scripts
-Add to `pnpm-workspace.yaml` `onlyBuiltDependencies` to avoid build warnings:
-- `@clerk/shared`
-- `@prisma/client`
-- `@prisma/engines`
-- `prisma`
-
-## Security Note
-Middleware role fallback `|| (userId ? "admin" : undefined)` is a privilege escalation risk. Authenticated users without role metadata should redirect to `/` (deny), not be granted admin.
-
-**How to apply:** Any time this school app needs @clerk/nextjs or next version changes, check the CVE status of the old version first and apply these patterns.
+**How to apply:** Use `getSessionUser(cookies())` in any server component for auth. Never accept `role` from client requests. Menu/client components get role as a prop from the server layout.

@@ -2,11 +2,13 @@ import Announcements from "@/components/Announcements";
 import BigCalendarContainer from "@/components/BigCalendarContainer";
 import EventCalendar from "@/components/EventCalendar";
 import prisma from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth";
+import { cookies } from "next/headers";
 import Link from "next/link";
 
 const StudentPage = async () => {
-  const { userId } = await auth();
+  const user = await getSessionUser(cookies());
+  const userId = user?.id;
 
   let classItem: { id: number; name: string } | null = null;
 
@@ -61,7 +63,7 @@ const StudentPage = async () => {
                 <rect x="8" y="10" width="16" height="12" rx="2" fill="#166534" />
                 <path d="M12 16l3 3 5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <span className="text-xs font-medium text-green-800">My Results</span>
+              <span className="text-xs font-medium text-green-800">Results</span>
             </Link>
             <Link
               href="/list/attendance"
@@ -79,24 +81,11 @@ const StudentPage = async () => {
 
         {/* SCHEDULE */}
         <div className="bg-white p-4 rounded-xl shadow-sm">
-          <h1 className="text-xl font-semibold mb-2">
-            My Class Schedule {classItem ? `(${classItem.name})` : ""}
-          </h1>
+          <h2 className="text-base font-semibold text-gray-700 mb-3">My Schedule</h2>
           {classItem ? (
             <BigCalendarContainer type="classId" id={classItem.id} />
           ) : (
-            <div className="flex flex-col items-center justify-center py-12 gap-3 text-center">
-              <svg viewBox="0 0 48 48" className="w-14 h-14" fill="none">
-                <circle cx="24" cy="24" r="22" fill="#F1F0FF" />
-                <rect x="12" y="14" width="24" height="20" rx="3" fill="#CFCEFF" stroke="#7c3aed" strokeWidth="1.5" />
-                <path d="M12 20h24" stroke="#7c3aed" strokeWidth="1.5" />
-                <path d="M18 12v4M30 12v4" stroke="#7c3aed" strokeWidth="2" strokeLinecap="round" />
-              </svg>
-              <p className="font-semibold text-gray-600">No Class Assigned Yet</p>
-              <p className="text-sm text-gray-400">
-                You haven't been assigned to a class. Please contact your admin.
-              </p>
-            </div>
+            <p className="text-sm text-gray-400">No class assigned yet.</p>
           )}
         </div>
       </div>

@@ -2,11 +2,13 @@ import Announcements from "@/components/Announcements";
 import BigCalendarContainer from "@/components/BigCalendarContainer";
 import EventCalendar from "@/components/EventCalendar";
 import prisma from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth";
+import { cookies } from "next/headers";
 import Link from "next/link";
 
 const ParentPage = async () => {
-  const { userId } = await auth();
+  const user = await getSessionUser(cookies());
+  const userId = user?.id;
 
   let students: { id: string; name: string; surname: string; classId: number }[] = [];
 
@@ -66,36 +68,38 @@ const ParentPage = async () => {
             >
               <svg viewBox="0 0 32 32" className="w-8 h-8" fill="none">
                 <rect width="32" height="32" rx="8" fill="#FAE27C" />
-                <path d="M8 13h2l3-5 5 10 3-5h3" stroke="#92400e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M8 12h16v8H8z" fill="#92400e" rx="2" />
+                <path d="M12 16h8M12 19h5" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
               <span className="text-xs font-medium text-yellow-800">Announcements</span>
             </Link>
           </div>
         </div>
 
-        {/* CHILDREN SCHEDULES */}
-        {students.length > 0 ? (
-          students.map((student) => (
-            <div key={student.id} className="bg-white p-4 rounded-xl shadow-sm">
-              <h1 className="text-xl font-semibold mb-2">
-                {student.name} {student.surname}&apos;s Schedule
-              </h1>
-              <BigCalendarContainer type="classId" id={student.classId} />
+        {/* CHILDREN */}
+        {students.length > 0 && (
+          <div className="bg-white p-4 rounded-xl shadow-sm">
+            <h2 className="text-base font-semibold text-gray-700 mb-3">My Children</h2>
+            <div className="flex flex-col gap-2">
+              {students.map((s) => (
+                <div key={s.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-lamaSkyLight transition-colors">
+                  <div className="w-8 h-8 rounded-full bg-lamaYellow flex items-center justify-center text-sm font-bold text-yellow-800">
+                    {s.name.charAt(0)}
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">{s.name} {s.surname}</span>
+                </div>
+              ))}
             </div>
-          ))
-        ) : (
-          <div className="bg-white p-4 rounded-xl shadow-sm flex flex-col items-center justify-center py-12 gap-3 text-center">
-            <svg viewBox="0 0 48 48" className="w-14 h-14" fill="none">
-              <circle cx="24" cy="24" r="22" fill="#dcfce7" />
-              <circle cx="18" cy="18" r="5" fill="#166534" />
-              <circle cx="30" cy="18" r="5" fill="#166534" />
-              <ellipse cx="18" cy="32" rx="8" ry="5" fill="#166534" />
-              <ellipse cx="30" cy="32" rx="8" ry="5" fill="#166534" />
-            </svg>
-            <p className="font-semibold text-gray-600">No Children Linked</p>
-            <p className="text-sm text-gray-400">
-              Your account has no students linked. Please contact your school admin.
-            </p>
+          </div>
+        )}
+
+        {/* SCHEDULE - first child */}
+        {students[0] && (
+          <div className="bg-white p-4 rounded-xl shadow-sm">
+            <h2 className="text-base font-semibold text-gray-700 mb-3">
+              {students[0].name}&apos;s Schedule
+            </h2>
+            <BigCalendarContainer type="classId" id={students[0].classId} />
           </div>
         )}
       </div>

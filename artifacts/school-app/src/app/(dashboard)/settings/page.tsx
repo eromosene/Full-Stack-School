@@ -1,8 +1,9 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth";
+import { cookies } from "next/headers";
 
 const SettingsPage = async () => {
-  const user = await currentUser();
-  const role = (user?.publicMetadata?.role as string | undefined) || "admin";
+  const user = await getSessionUser(cookies());
+  const role = user?.role || "admin";
 
   const settingsSections = [
     {
@@ -64,8 +65,7 @@ const SettingsPage = async () => {
         <div className="bg-white p-6 rounded-xl shadow-sm border-l-4 border-purple-400">
           <h2 className="text-base font-semibold text-gray-700 mb-2">Admin Controls</h2>
           <p className="text-sm text-gray-400 mb-4">
-            As an admin, you have access to user role management via the Clerk dashboard.
-            Set user roles by adding <code className="bg-gray-100 px-1 rounded">publicMetadata.role</code> to each user.
+            As an admin, you manage user roles. Assign roles (admin, teacher, student, parent) when creating accounts.
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {["admin", "teacher", "student", "parent"].map((r) => (

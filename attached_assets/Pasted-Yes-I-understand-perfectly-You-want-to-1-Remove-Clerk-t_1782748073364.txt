@@ -1,0 +1,98 @@
+Yes, I understand perfectly. You want to:
+
+1. **Remove Clerk** (the current auth system) completely
+2. **Sign In** — just email + password, with a "Remember Me" option to save details
+3. **Sign Up** — name, email, phone number, password (simple form)
+4. **Landing page** — add a Sign Up option alongside the existing role-based sign in
+
+Let me check the current build first before giving you the prompt.
+
+Good, I have a full picture now. This is a **big change** — Clerk is deeply embedded in the middleware, layouts, navbar, all 14 list pages, and the sign-in page. I want to be honest with you before giving you the prompt.
+
+**What removing Clerk means:**
+
+- All the `currentUser()`, `auth()`, `sessionClaims` calls across every file need to be replaced
+- The middleware that protects routes needs to be rewritten
+- You'll need a new simple auth system using **JWT tokens + cookies** stored in the database
+- The "Remember Me" feature will save login details in the browser using `localStorage`
+
+**This is a large rewrite.** Here's the prompt — paste it into Replit AI:
+
+---
+
+I want to completely replace Clerk authentication with a simple custom auth system. Here is everything needed:
+
+**1. Remove Clerk entirely:**
+- Uninstall `@clerk/nextjs` from dependencies
+- Remove `ClerkProvider` from `src/app/layout.tsx`
+- Delete `src/middleware.ts` and replace it with a simple custom middleware
+- Remove all imports of `auth`, `currentUser`, `clerkMiddleware` across every file
+
+**2. Create a simple auth system using JWT + cookies:**
+- Install `jsonwebtoken` and `bcryptjs` and `cookie` packages
+- Create `src/lib/auth.ts` with helper functions: `hashPassword`, `verifyPassword`, `createToken`, `verifyToken`, `getSessionUser`
+- Store sessions as JWT cookies named `yps_session`
+
+**3. Add a User table to Prisma schema** if not already there:
+```prisma
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  phone     String?
+  password  String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+}
+```
+Run `npx prisma db push` after adding it.
+
+**4. Create API routes:**
+- `src/app/api/auth/login/route.ts` — accepts `{email, password}`, verifies against DB, returns JWT cookie
+- `src/app/api/auth/signup/route.ts` — accepts `{name, email, phone, password}`, hashes password, saves to DB, returns JWT cookie
+- `src/app/api/auth/logout/route.ts` — clears the JWT cookie
+
+**5. Replace the sign-in page** at `src/app/[[...sign-in]]/page.tsx` with a clean custom page that has:
+- Two tabs: **Sign In** and **Sign Up**
+- Sign In form: email, password, "Remember Me" checkbox (saves email to localStorage)
+- Sign Up form: name, email, phone number, password, confirm password
+- Keep the Yemsol Private Schools branding and logo
+- On successful login redirect to `/admin` (or the appropriate role dashboard)
+
+**6. Replace middleware** `src/middleware.ts` with:
+```ts
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+
+export function middleware(req: NextRequest) {
+  const token = req.cookies.get("yps_session")?.value;
+  const isAuthPage = req.nextUrl.pathname === "/";
+  
+  if (!token && !isAuthPage) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+  if (token && isAuthPage) {
+    return NextResponse.redirect(new URL("/admin", req.url));
+  }
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ["/((?!api|_next|public|.*\\..*).*)"],
+};
+```
+
+**7. Replace all Clerk role detection** across every list page and layout:
+- Remove `auth()` and `sessionClaims` imports
+- Replace with a server-side call to `getSessionUser(cookies())` from `src/lib/auth.ts`
+- The role comes from the JWT token payload
+
+**8. Update `src/app/(dashboard)/layout.tsx`:**
+- Remove `currentUser()` from Clerk
+- Use `getSessionUser` from the custom auth lib instead to get role
+
+Keep all existing UI, Prisma data fetching, and page functionality exactly the same. Only replace the authentication layer.
+
+---
+
+This is a significant change so Replit may need a few attempts. If it errors, share the error and I'll give you the fix.
