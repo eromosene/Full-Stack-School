@@ -103,7 +103,7 @@ export default function LoginPage() {
           {/* Main large photo */}
           <div className="relative z-10 mx-6 flex-1 rounded-2xl overflow-hidden min-h-[180px] lg:min-h-0">
             <img
-              src="/copy of from all of us at yemsol,.jpg"
+              src="/copy of from all of us at yemsol,.png"
               alt="Yemsol students"
               className="w-full h-full object-cover"
               onError={(e) => {

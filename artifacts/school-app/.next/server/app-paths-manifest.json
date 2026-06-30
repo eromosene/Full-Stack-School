@@ -1,6 +1,3 @@
 {
-  "/[[...sign-in]]/page": "app/[[...sign-in]]/page.js",
-  "/auth/logout/route": "app/auth/logout/route.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/(dashboard)/admin/page": "app/(dashboard)/admin/page.js"
+  "/[[...sign-in]]/page": "app/[[...sign-in]]/page.js"
 }
