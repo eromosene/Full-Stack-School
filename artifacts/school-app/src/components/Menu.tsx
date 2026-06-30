@@ -38,7 +38,7 @@ const Menu = ({ role }: { role: string }) => {
   const router = useRouter();
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
+    await fetch("/auth/logout", { method: "POST" });
     router.push("/");
     router.refresh();
   };

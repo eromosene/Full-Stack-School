@@ -21,21 +21,31 @@ const matchers = Object.entries(routeAccessMap).map(([route, allowedRoles]) => (
   allowedRoles,
 }));
 
+// Paths that are always public — no token required
+const PUBLIC_PREFIXES = ["/auth/", "/"];
+
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get("yps_session")?.value;
-  const isAuthPage = pathname === "/";
+
+  const isLanding = pathname === "/";
+  const isAuthRoute = pathname.startsWith("/auth/");
+
+  // Auth API routes (login/signup/logout) — always pass through
+  if (isAuthRoute) {
+    return NextResponse.next();
+  }
 
   // Not logged in → send to landing
-  if (!token && !isAuthPage) {
+  if (!token && !isLanding) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
-  // Logged in and on auth page → send to dashboard
-  if (token && isAuthPage) {
+  // Logged in and on landing page → redirect to their dashboard
+  if (token && isLanding) {
     const payload = await verifySessionCookie(token);
     if (!payload) {
-      // Invalid/expired token — clear cookie and stay on auth page
+      // Invalid/expired token — clear cookie and stay on landing
       const res = NextResponse.next();
       res.cookies.set("yps_session", "", { maxAge: 0, path: "/" });
       return res;
@@ -44,11 +54,10 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL(`/${role}`, req.url));
   }
 
-  // Check route-level role access
+  // Check route-level role access for authenticated users
   if (token) {
     const payload = await verifySessionCookie(token);
     if (!payload) {
-      // Invalid token → clear and redirect to login
       const res = NextResponse.redirect(new URL("/", req.url));
       res.cookies.set("yps_session", "", { maxAge: 0, path: "/" });
       return res;
@@ -70,6 +79,6 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!api|_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
   ],
 };

@@ -159,7 +159,7 @@ export default function LoginPage() {
     setSiError("");
     setSiLoading(true);
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch("/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: siEmail, password: siPassword }),
@@ -196,7 +196,7 @@ export default function LoginPage() {
     }
     setSuLoading(true);
     try {
-      const res = await fetch("/api/auth/signup", {
+      const res = await fetch("/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
