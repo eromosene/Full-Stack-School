@@ -1,0 +1,71 @@
+Wow, those mockups look really professional! I can see exactly what you want:
+
+- **Left side**: School photos collage with branding
+- **Right side**: Clean sign in form with role selector, email, password, remember me
+- **Bottom**: Feature highlights bar
+- Real Yemsol school photos used as the background/collage
+
+You have 4 photos to use:
+1. Students in uniform (group photo with logo)
+2. Cultural/community gathering
+3. Students at school event (Dano milk)
+4. Graduation/ceremony group
+
+Paste this to Replit AI:
+
+---
+
+Redesign the landing page at `src/app/[[...sign-in]]/page.tsx` to match this layout exactly:
+
+**Upload these image files into the `public/` folder first:**
+- `public/yemsol-students.jpg` — group photo of students in uniform
+- `public/yemsol-community.jpg` — cultural gathering photo
+- `public/yemsol-event.jpg` — students at school event
+- `public/yemsol-staff.jpg` — staff/graduation group photo
+
+**Desktop layout (side by side):**
+- Left half: dark navy/purple background with the Yemsol logo and name top left, tagline "Empowering Minds, Building Futures", a large student group photo taking most of the space, two smaller photos side by side at the bottom, and bold text "Building Today, Inspiring Tomorrow" with subtitle
+- Right half: white card with "Welcome Back!" heading, subtitle "Sign in to continue to your Yemsol Private Schools account", then the sign in form containing:
+  - Role dropdown (Admin, Teacher, Student, Parent)
+  - Email Address input with envelope icon
+  - Password input with lock icon and show/hide eye toggle
+  - Remember me checkbox + "Forgot Password?" link on same row
+  - Purple "Sign In →" button
+  - "or" divider
+  - "Need Help? Contact Support" outline button
+
+**Mobile layout (stacked):**
+- Top: logo + school name + tagline
+- Large student photo
+- Small info card overlay (top right): "A complete school management platform..."
+- Two smaller photos side by side
+- Then the full sign in form below
+- Bottom dark footer bar with 4 feature icons: Lesson Management, Attendance Tracking, Exam Scheduling, Parent Portal
+
+**Bottom bar (both layouts):**
+- Dark navy background
+- 4 icons with labels: Secure & Reliable, Easy to Use, All in One Platform, Dedicated Support
+- Copyright: "© 2026 Yemsol Private Schools • School Management System"
+- "In God We Trust" text on the right
+
+**Design details:**
+- Primary color: deep purple `#4C1D95` / `#6D28D9`
+- Accent: gold/yellow `#F59E0B`
+- Font: bold, modern
+- The role selector cards from the old design should be removed — role is now selected via the dropdown inside the sign in form
+- Remove the Sign Up tab completely from this page for now — sign up is handled by admin only
+- Keep all existing auth logic (`handleSignIn` function, remember me localStorage) exactly the same, just wrap it in this new UI
+
+**Image placement:**
+- Main large image: `copy of from all of us at yemsol,.jpg`
+- Bottom left small image: `IMG_1757.jpg`  
+- Bottom right small image: `IMG_4410.jpg`
+- The school building/event photo (`IMG_1762.jpg`) can be used as a subtle background or omitted
+
+After making code changes, I will manually upload the photos into the `public/` folder via Replit file explorer with the exact filenames above.
+
+---
+
+After Replit finishes the code, go to your Replit **file explorer**, open the `public/` folder, and upload each photo with the exact filename listed above. That's the only manual step.
+
+Also keep the Sign Up option available. Add a “Don’t have an account? Sign Up” link below the Sign In form that toggles to a sign up form with fields for: Full Name, Email, Phone Number, Password, and Confirm Password. The sign up form should also have a “Already have an account? Sign In” link to toggle back. Keep all existing signup logic (handleSignUp function) exactly as it is.

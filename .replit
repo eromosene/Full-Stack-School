@@ -60,3 +60,6 @@ NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL = "/"
 
 [nix]
 channel = "stable-25_05"
+
+[objectStorage]
+defaultBucketID = "replit-objstore-14d45076-cb6e-46b6-bc40-7bb39e0e8afe"
