@@ -2,7 +2,9 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
-const JWT_SECRET = process.env.SESSION_SECRET || "yps-fallback-secret-change-in-production";
+const _rawSecret = process.env.SESSION_SECRET;
+if (!_rawSecret) throw new Error("SESSION_SECRET environment variable is not set");
+const JWT_SECRET: string = _rawSecret;
 export const COOKIE_NAME = "yps_session";
 
 export type SessionUser = {

@@ -134,7 +134,6 @@ export const studentsData = [
     photo:
       "https://images.pexels.com/photos/2888150/pexels-photo-2888150.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
-    grade: 5,
     class: "1B",
     address: "123 Main St, Anytown, USA",
   },
@@ -146,7 +145,6 @@ export const studentsData = [
     photo:
       "https://images.pexels.com/photos/936126/pexels-photo-936126.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
-    grade: 5,
     class: "5A",
     address: "123 Main St, Anytown, USA",
   },
@@ -158,7 +156,6 @@ export const studentsData = [
     photo:
       "https://images.pexels.com/photos/428328/pexels-photo-428328.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
-    grade: 5,
     class: "5A",
     address: "123 Main St, Anytown, USA",
   },
@@ -170,7 +167,6 @@ export const studentsData = [
     photo:
       "https://images.pexels.com/photos/1187765/pexels-photo-1187765.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
-    grade: 5,
     class: "5A",
     address: "123 Main St, Anytown, USA",
   },
@@ -182,7 +178,6 @@ export const studentsData = [
     photo:
       "https://images.pexels.com/photos/1102341/pexels-photo-1102341.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
-    grade: 5,
     class: "5A",
     address: "123 Main St, Anytown, USA",
   },
@@ -194,7 +189,6 @@ export const studentsData = [
     photo:
       "https://images.pexels.com/photos/712513/pexels-photo-712513.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
-    grade: 5,
     class: "5A",
     address: "123 Main St, Anytown, USA",
   },
@@ -206,7 +200,6 @@ export const studentsData = [
     photo:
       "https://images.pexels.com/photos/1438081/pexels-photo-1438081.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
-    grade: 5,
     class: "5A",
     address: "123 Main St, Anytown, USA",
   },
@@ -218,7 +211,6 @@ export const studentsData = [
     photo:
       "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
-    grade: 5,
     class: "5A",
     address: "123 Main St, Anytown, USA",
   },
@@ -230,7 +222,6 @@ export const studentsData = [
     photo:
       "https://images.pexels.com/photos/842980/pexels-photo-842980.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
-    grade: 5,
     class: "5A",
     address: "123 Main St, Anytown, USA",
   },
@@ -242,7 +233,6 @@ export const studentsData = [
     photo:
       "https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=1200",
     phone: "1234567890",
-    grade: 5,
     class: "5A",
     address: "123 Main St, Anytown, USA",
   },
@@ -385,76 +375,16 @@ export const subjectsData = [
 ];
 
 export const classesData = [
-  {
-    id: 1,
-    name: "1A",
-    capacity: 20,
-    grade: 1,
-    supervisor: "Joseph Padilla",
-  },
-  {
-    id: 2,
-    name: "2B",
-    capacity: 22,
-    grade: 2,
-    supervisor: "Blake Joseph",
-  },
-  {
-    id: 3,
-    name: "3C",
-    capacity: 20,
-    grade: 3,
-    supervisor: "Tom Bennett",
-  },
-  {
-    id: 4,
-    name: "4B",
-    capacity: 18,
-    grade: 4,
-    supervisor: "Aaron Collins",
-  },
-  {
-    id: 5,
-    name: "5A",
-    capacity: 16,
-    grade: 5,
-    supervisor: "Iva Frank",
-  },
-  {
-    id: 5,
-    name: "5B",
-    capacity: 20,
-    grade: 5,
-    supervisor: "Leila Santos",
-  },
-  {
-    id: 7,
-    name: "7A",
-    capacity: 18,
-    grade: 7,
-    supervisor: "Carrie Walton",
-  },
-  {
-    id: 8,
-    name: "6B",
-    capacity: 22,
-    grade: 6,
-    supervisor: "Christopher Butler",
-  },
-  {
-    id: 9,
-    name: "6C",
-    capacity: 18,
-    grade: 6,
-    supervisor: "Marc Miller",
-  },
-  {
-    id: 10,
-    name: "6D",
-    capacity: 20,
-    grade: 6,
-    supervisor: "Ophelia Marsh",
-  },
+  { id: 1,  name: "1A", supervisor: "Joseph Padilla" },
+  { id: 2,  name: "2B", supervisor: "Blake Joseph" },
+  { id: 3,  name: "3C", supervisor: "Tom Bennett" },
+  { id: 4,  name: "4B", supervisor: "Aaron Collins" },
+  { id: 5,  name: "5A", supervisor: "Iva Frank" },
+  { id: 6,  name: "5B", supervisor: "Leila Santos" },
+  { id: 7,  name: "7A", supervisor: "Carrie Walton" },
+  { id: 8,  name: "6B", supervisor: "Christopher Butler" },
+  { id: 9,  name: "6C", supervisor: "Marc Miller" },
+  { id: 10, name: "6D", supervisor: "Ophelia Marsh" },
 ];
 
 export const lessonsData = [

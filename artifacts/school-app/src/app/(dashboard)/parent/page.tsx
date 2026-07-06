@@ -10,7 +10,7 @@ const ParentPage = async () => {
   const user = await getSessionUser(cookies());
   const userId = user?.id;
 
-  let students: { id: string; name: string; surname: string; classId: number }[] = [];
+  let students: { id: string; name: string; surname: string; classId: number | null }[] = [];
 
   try {
     students = await prisma.student.findMany({
@@ -99,7 +99,9 @@ const ParentPage = async () => {
             <h2 className="text-base font-semibold text-gray-700 mb-3">
               {students[0].name}&apos;s Schedule
             </h2>
-            <BigCalendarContainer type="classId" id={students[0].classId} />
+            {students[0].classId != null && (
+              <BigCalendarContainer type="classId" id={students[0].classId} />
+            )}
           </div>
         )}
       </div>

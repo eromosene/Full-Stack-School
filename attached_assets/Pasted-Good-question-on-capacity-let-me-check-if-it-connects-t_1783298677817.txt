@@ -1,0 +1,50 @@
+Good question on capacity — let me check if it connects to anything else before answering.
+
+Looking at the schema I already pulled: **Capacity is NOT linked to anything else in the system.** It's just a plain number field on the Class model — nothing reads it, calculates against it, or validates student count against it anywhere. It's safe to remove.
+
+**Grade is a different story** — as I showed you, it's required by both `Class` and `Student`. Removing it means restructuring two models, not just one field. Here's what the flow will actually look like:
+
+**What removing Grade really means:**
+- Class no longer needs a Grade to be created — ✅ what you want
+- Student also currently requires a Grade directly — this has to be removed too, or Student creation will break later
+- Any pages that currently display or filter by Grade (if any) need Grade references stripped out
+- The database itself needs the `gradeId` columns dropped from both tables — this requires a Prisma migration, not just a UI change
+
+**The flow after this change:**
+1. Create Class → just Class Name + Supervisor (optional) — that's it
+2. Create Student → will use only Class (no separate Grade field)
+3. Grade becomes unused entirely — the Grade table/model can be deleted from the schema
+
+Paste this to Replit AI:
+
+---
+
+I want to completely remove "Grade" and "Capacity" from the Class creation flow and from the system entirely.
+
+**1. Remove Capacity:**
+- Remove the `capacity` field from the `Class` model in `prisma/schema.prisma`
+- Remove the Capacity input from `src/components/forms/ClassForm.tsx`
+- Remove any display of capacity on the Classes list page or class detail views
+
+**2. Remove Grade completely:**
+- Remove the `Grade` model entirely from `prisma/schema.prisma`
+- Remove `gradeId` and the `grade` relation from the `Class` model
+- Remove `gradeId` and the `grade` relation from the `Student` model
+- Remove the Grade dropdown from `src/components/forms/ClassForm.tsx`
+- Remove the Grade field from the Student creation form (`src/components/forms/StudentForm.tsx` or similar) if present
+- Remove any Grade references on list pages, filters, or detail views across the app
+- Remove Grade from `src/lib/formValidationSchemas.ts` validation for both Class and Student schemas
+
+**3. After schema changes, run the migration:**
+Run `npx prisma db push` (or generate a proper migration if using `prisma migrate dev`) to apply these schema changes to the database. Since Grade and Capacity data will be dropped, warn me if this requires resetting existing Class/Student data — I want to know before anything is deleted.
+
+**4. Final Class creation flow should be simple:**
+- Class Name (required, unique)
+- Supervisor (optional teacher dropdown)
+- That's it — no Grade, no Capacity
+
+Please confirm before running any destructive database command, since dropping columns that already have data in them could cause data loss.
+
+---
+
+That last instruction is important — since you already tried creating classes, there might be partial data. Replit should check with you before it wipes anything.

@@ -1,0 +1,39 @@
+I want the landing/sign-in page at src/app/[[...sign-in]]/page.tsx to feel modern and premium — right now it’s too flat and basic. Keep the existing layout structure (photo collage on top/left, sign-in form below/right) and all existing logic (handleSignIn, handleSignUp, remember me), but upgrade the visual design with these changes:
+
+1. Background & depth:
+
+	•	Replace the flat solid navy background with a subtle gradient: bg-gradient-to-br from-[#2E1065] via-[#3B0764] to-[#1E1B4B]
+	•	Add soft decorative blurred circles (glassmorphism blobs) in the background using absolutely positioned divs with blur-3xl opacity-30 and gold/purple colors, so it doesn’t feel empty
+
+2. Photo collage upgrade:
+
+	•	Add a subtle rounded border glow around the main student photo: ring-4 ring-white/10 shadow-2xl shadow-purple-900/50
+	•	Add a slight hover scale effect on the two smaller photos: hover:scale-105 transition-transform duration-300
+	•	Round all photo corners more: rounded-2xl
+
+3. Sign-in card upgrade:
+
+	•	Give the white card a floating, elevated feel: shadow-2xl shadow-purple-900/20 border border-gray-100
+	•	Add a subtle gradient accent bar at the top of the card (thin gold-to-purple gradient line)
+	•	Make the “Sign In” button have a gradient instead of flat purple: bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 with a subtle shadow shadow-lg shadow-purple-500/30
+	•	Add smooth transition on all inputs when focused: focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all
+
+4. Typography:
+
+	•	Make “Welcome Back!” use a gradient text effect: bg-gradient-to-r from-purple-700 to-indigo-600 bg-clip-text text-transparent
+	•	Increase font weight on headings for more impact
+
+5. Bottom feature bar:
+
+	•	Give each of the 4 icons (Secure & Reliable, Easy to Use, All in One Platform, Dedicated Support) a small circular gradient background instead of flat color, and a subtle hover lift effect
+
+6. Micro-interactions:
+
+	•	Add smooth fade-in animation on page load for the whole card using Tailwind’s animate-fade-in (define a simple custom keyframe in globals.css if not already present)
+	•	Add a subtle pulsing glow behind the logo circle
+
+7. Mobile view:
+
+	•	Make sure all these upgrades scale down cleanly on mobile — test that the gradients, shadows, and blobs don’t overflow or cause horizontal scroll
+
+Keep the color palette (deep purple, gold accents) but make everything feel more premium, layered, and modern — like a fintech or SaaS product landing page rather than a plain form.

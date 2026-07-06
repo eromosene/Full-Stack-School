@@ -1,0 +1,54 @@
+Good question on the login behavior — let me address that in the prompt, and also answer it directly for you first.
+
+**How login should work after promotion:** The role is stored once in the database on the User record. When a teacher gets promoted to Admin, that same field changes from `"teacher"` to `"admin"`. So next time they log in, the system checks the database role — not what they pick on the dropdown — and sends them to `/admin`. The Role dropdown on Sign In is just a visual label; the real role always comes from the database. So a promoted teacher will now log in and land on the **Admin dashboard automatically**, not the Teacher one.
+
+Here's the corrected full prompt:
+
+---
+
+**Paste this into Replit AI:**
+
+---
+
+I want to update Sign Up and Sign In as follows:
+
+**1. Sign Up — remove Admin as a selectable role:**
+In `src/app/[[...sign-in]]/page.tsx`, update the Sign Up Role dropdown to only show: **Teacher, Student, Parent**. Remove "Admin" as an option entirely from Sign Up. Update the subtitle to "Create your Yemsol Private Schools account".
+
+**2. Sign In — keep Admin as a role option, unchanged:**
+The Sign In form's Role dropdown should still include Admin, Teacher, Student, and Parent as before, so existing Admins can log in normally. Do not change Sign In behavior — the actual role used to redirect the user after login must always come from the database (`data.role` returned by `/auth/login`), never from the dropdown selection, since the dropdown is just a visual label.
+
+**3. Update `src/app/api/auth/signup/route.ts` (or wherever `/auth/signup` is handled):**
+- Accept `role` from the request body
+- Validate that `role` is one of: `"teacher"`, `"student"`, `"parent"` only — reject `"admin"` and anything else with a 400 error, even if sent directly to the API
+- Include the selected role in the signup request from the frontend:
+```ts
+body: JSON.stringify({ name: suName, email: suEmail, phone: suPhone, password: suPassword, role: selectedRole }),
+```
+
+**4. Data consistency — Teacher, Student, and Parent roles link to actual records in the database (Teacher, Student, Parent tables), not just the User/auth table:**
+- Signing up as **Teacher** also creates a `Teacher` record linked to the new User ID, with name/email/phone filled in and other fields (subjects, classes) left empty for an Admin to complete later.
+- Signing up as **Student** creates a `Student` record the same way, with `classId` and `parentId` left unassigned until an Admin links them.
+- Signing up as **Parent** creates a `Parent` record the same way.
+
+**5. Keep the existing Admin-driven creation flow untouched** — Admins can still create Teachers/Students/Parents from the dashboard forms exactly as before.
+
+**6. Add a feature — Admin can promote any existing user to Admin role:**
+- Add a "Promote to Admin" action button visible only to Admins, on the Admins list page (or wherever users are managed)
+- Clicking it updates that user's `role` field in the User table to `"admin"`
+- Add a confirmation prompt: "Are you sure you want to make [name] an Admin? This grants full system access."
+- Optionally allow demoting an Admin back to their original role, in case of mistakes
+
+**7. Confirm login behavior after promotion:**
+When a Teacher/Student/Parent is promoted to Admin, their `role` field in the database changes to `"admin"`. The next time they log in, `/auth/login` must return their current database role (now `"admin"`), and the frontend must redirect them to `/admin` — regardless of what they select in the Sign In Role dropdown. The dropdown selection should never override the database-verified role.
+
+Test that after this change:
+- Signing up as Teacher/Student/Parent works and creates linked records correctly
+- Trying to sign up as Admin is not possible from the UI, and is rejected by the API even if attempted directly
+- Signing IN as Admin still works exactly as before for existing admins
+- An existing Admin can promote a Teacher/Student/Parent to Admin from the dashboard
+- After promotion, that user logs in and is correctly redirected to `/admin`, not their old role's dashboard
+
+---
+
+That covers both the removal of Admin self-signup and confirms the promoted-user login flow works off the database, not the dropdown.

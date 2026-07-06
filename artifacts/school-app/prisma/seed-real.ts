@@ -12,27 +12,13 @@ const DANIEL_ID = "user_3CASRQFsOccR3Y0A2sgFCEH8nX2";      // Daniel Unuagba (ad
 async function main() {
   console.log("Starting database seed...");
 
-  // GRADES
-  for (let i = 1; i <= 6; i++) {
-    await prisma.grade.upsert({
-      where: { level: i },
-      update: {},
-      create: { level: i },
-    });
-  }
-  console.log("✓ Grades");
-
   // CLASSES
   const classNames = ["1A", "2A", "3A", "4A", "5A", "6A"];
-  for (let i = 0; i < classNames.length; i++) {
+  for (const name of classNames) {
     await prisma.class.upsert({
-      where: { name: classNames[i] },
+      where: { name },
       update: {},
-      create: {
-        name: classNames[i],
-        gradeId: i + 1,
-        capacity: 30,
-      },
+      create: { name },
     });
   }
   console.log("✓ Classes");
@@ -107,7 +93,6 @@ async function main() {
 
   // REAL STUDENT (from Clerk) — linked to real parent + class 4A
   const class4A = await prisma.class.findUnique({ where: { name: "4A" } });
-  const grade4 = await prisma.grade.findUnique({ where: { level: 4 } });
 
   await prisma.student.upsert({
     where: { id: STUDENT_ID },
@@ -123,8 +108,7 @@ async function main() {
       sex: UserSex.MALE,
       birthday: new Date("2010-03-20"),
       parentId: PARENT_ID,
-      classId: class4A!.id,
-      gradeId: grade4!.id,
+      classId: class4A?.id ?? null,
     },
   });
   console.log("✓ Student record");

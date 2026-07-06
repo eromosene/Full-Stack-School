@@ -9,8 +9,9 @@ import {
   TeacherSchema,
 } from "./formValidationSchemas";
 import prisma from "./prisma";
-import { hashPassword } from "./auth";
+import { hashPassword, getSessionUser } from "./auth";
 import { randomUUID } from "crypto";
+import { cookies } from "next/headers";
 
 type CurrentState = { success: boolean; error: boolean };
 
@@ -228,15 +229,6 @@ export const createStudent = async (
 ) => {
   console.log(data);
   try {
-    const classItem = await prisma.class.findUnique({
-      where: { id: data.classId },
-      include: { _count: { select: { students: true } } },
-    });
-
-    if (classItem && classItem.capacity === classItem._count.students) {
-      return { success: false, error: true };
-    }
-
     const id = randomUUID();
 
     // Create login account if email + password provided
@@ -266,8 +258,7 @@ export const createStudent = async (
         bloodType: data.bloodType,
         sex: data.sex,
         birthday: data.birthday,
-        gradeId: data.gradeId,
-        classId: data.classId,
+        classId: data.classId ?? null,
         parentId: data.parentId,
       },
     });
@@ -310,8 +301,7 @@ export const updateStudent = async (
         bloodType: data.bloodType,
         sex: data.sex,
         birthday: data.birthday,
-        gradeId: data.gradeId,
-        classId: data.classId,
+        classId: data.classId ?? null,
         parentId: data.parentId,
       },
     });
@@ -386,6 +376,51 @@ export const deleteExam = async (
   const id = data.get("id") as string;
   try {
     await prisma.exam.delete({ where: { id: parseInt(id) } });
+    return { success: true, error: false };
+  } catch (err) {
+    console.log(err);
+    return { success: false, error: true };
+  }
+};
+
+// ── Role promotion / demotion ────────────────────────────────────────────────
+
+export const promoteToAdmin = async (userId: string) => {
+  const session = await getSessionUser(cookies());
+  if (!session) return { success: false, error: true };
+  // Re-verify caller's role against DB to avoid stale JWT claims
+  const caller = await prisma.user.findUnique({ where: { id: session.id }, select: { role: true } });
+  if (!caller || caller.role !== "admin") {
+    return { success: false, error: true };
+  }
+  try {
+    await prisma.user.update({ where: { id: userId }, data: { role: "admin" } });
+    revalidatePath("/list/teachers");
+    revalidatePath("/list/students");
+    revalidatePath("/list/parents");
+    return { success: true, error: false };
+  } catch (err) {
+    console.log(err);
+    return { success: false, error: true };
+  }
+};
+
+export const demoteUser = async (
+  userId: string,
+  role: "teacher" | "student" | "parent"
+) => {
+  const session = await getSessionUser(cookies());
+  if (!session) return { success: false, error: true };
+  // Re-verify caller's role against DB to avoid stale JWT claims
+  const caller = await prisma.user.findUnique({ where: { id: session.id }, select: { role: true } });
+  if (!caller || caller.role !== "admin") {
+    return { success: false, error: true };
+  }
+  try {
+    await prisma.user.update({ where: { id: userId }, data: { role } });
+    revalidatePath("/list/teachers");
+    revalidatePath("/list/students");
+    revalidatePath("/list/parents");
     return { success: true, error: false };
   } catch (err) {
     console.log(err);
